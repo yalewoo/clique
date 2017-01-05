@@ -1,0 +1,11 @@
+# '-i link-list graph res' -> 9 nodes partitioned in 0s from codelength 2.896439345 in one level to codelength 2.650000000 in 2 levels.
+# path flow name node:
+1:1 0.2 "3" 3
+1:2 0.2 "5" 5
+1:3 0.15 "2" 2
+1:4 0.1 "1" 1
+1:5 0.1 "4" 4
+2:1 0.15 "6" 6
+2:2 0.05 "7" 7
+2:3 0.025 "8" 8
+2:4 0.025 "9" 9
