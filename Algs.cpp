@@ -27,11 +27,13 @@ bool Algs::loadConfig(char* filename)
 		config[name] = value;
 	fclose(fin);
 
+	config["Graphviz_Path"] = "\"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe\"";
+
 	return true;
 }
 
 
-void Algs::runInfoMap(Graph g, char *outdir)
+void Algs::runInfoMap(Graph & g, char *outdir)
 {
 	
 	string inputfile = config["Temp_Dir"] + "graph";
@@ -119,4 +121,33 @@ void Algs::readInfoMapResult(char *filename, Communities &cs)
 		}
 		lastn = n;
 	}
+}
+
+
+
+
+
+
+void Algs::runGraphviz(char *dotfile, char *imgfile)
+{
+	string inputfile = dotfile;
+	string output = imgfile;
+
+	string tags = " -i link-list";
+
+#ifdef WIN32
+	systemCall((config["Graphviz_Path"] + " " + inputfile + " -T gif -o " + output).c_str());
+#else
+	systemCall((config["Graphviz_Path"] + "Infomap " + inputfile + " " + outputdir + tags).c_str());
+#endif;
+}
+
+void Algs::openfile(char *filename)
+{
+	string inputfile = filename;
+#ifdef WIN32
+	systemCall(("" + inputfile + "").c_str());
+#else
+	systemCall((config["Graphviz_Path"] + "Infomap " + inputfile + " " + outputdir + tags).c_str());
+#endif;
 }

@@ -5,3 +5,5 @@ graph/
 infomap_clique.vcxproj
 infomap_clique.vcxproj.filters
 output.txt
+*.o
+*.exe

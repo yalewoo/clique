@@ -19,9 +19,13 @@ class Algs
 public:
 
 	Algs(char filename[] = "config");
-	void runInfoMap(Graph g, char *outdir);
+	void runInfoMap(Graph & g, char *outdir);
 	void runInfoMap(char *filename, char *outdir);
-	void Algs::readInfoMapResult(char *filename, Communities &cs);
+	void readInfoMapResult(char *filename, Communities &cs);
+
+
+	void runGraphviz(char *dotfile, char *imgfile);
+	void openfile(char *filename);
 };
 
 #endif

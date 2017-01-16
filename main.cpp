@@ -10,6 +10,19 @@ using std::endl;
 #include <cstdio>
 #include <ctime>
 
+void showimg(Graph & g)
+{
+	cout << g.nodes_size() << " nodes " << endl;
+	g.create_dot_file("tmp\\t.dot");
+	g.save("tmp\\ggg.edge");
+	Algs algs;
+	algs.runGraphviz("tmp\\t.dot", "tmp\\t.gif");
+	cout << "press enter to show img" << endl;
+	getchar();
+	algs.openfile("tmp\\t.gif");
+
+
+}
 void print(const vector<int> &v)
 {
 	for (int i = 0; i < v.size(); ++i)
@@ -18,6 +31,7 @@ void print(const vector<int> &v)
 }
 void output(FILE *fp, vector<int> &v)
 {
+	cout << v.size() << " nodes : " ;
 	for (int i = 0; i < v.size(); ++i)
 	{
 		fprintf(fp, "%d ", v[i]);
@@ -34,7 +48,7 @@ void output(FILE *fp, vector<int> &v)
 
 void findClique()
 {
-	Graph g("graph/my.txt");
+	Graph g("graph/graph.pairs");
 
 	cout << "load ok" << endl;
 
@@ -50,6 +64,7 @@ void findClique()
 	while (g.nodes_size() > 0)
 	{
 		int i;
+		int lasti = 0;
 		for (i = 0; i < v.size(); ++i)
 		{
 			g.bfs(subnodes, v[i]);
@@ -62,55 +77,48 @@ void findClique()
 				break;
 			}
 		}
-		if (v.size() == 0 || i == v.size() + 1)
+		if (v.size() == 0/* || i == v.size() + 1*/)
 			break;
 	}
 
 	fclose(fp);
 }
-int main()
+
+void infomap_find_clique(char *file, char *outdir = "tmp")
 {
-	Graph g("graph/graph.pairs");
-	//g.print();
+	char treefile[256];
+	strcpy(treefile, outdir);
+	int n = strlen(treefile);
+	
+	treefile[n] = '\\';
+	treefile[n+1] = '\0';
+	
+	char treef[256];
+	strcpy(treef, treefile);
+
+	strcpy(treefile, file);
+	n = strlen(treefile);
+	while (n >= 0 && treefile[n] != '.')
+		--n;
+	treefile[n + 1] = '\0';
+	int n2 = n;
+	while (n2 >= 0 && (treefile[n2] != '\\' && treefile[n2] != '/'))
+		--n2;
+	++n2;
+	strcat(treefile, "tree");
+
+	strcat(treef, treefile + n2);
 	
 
+	Graph g(file);
 	
-
-	/*
-	vector<int> v;
-	//g.bfs(v, 3);
-	g.getMinDegreeNodes(v);
-	print(v);
-
-	g.removeNodes(v);
-	g.print();
-
-	g.getMinDegreeNodes(v);
-	print(v);
-
-	g.removeNodes(v);
-	g.print();
-
-	g.getMinDegreeNodes(v);
-	print(v);
-	g.removeNodes(v);
-	g.print();
-	*/
-	
-
-
-	//Graph g1;
-	//vector<int> v = {7,2,3,4,5};
-	//g.subGraph(v, g1);
-
-	//g1.print();
 
 	Algs algs;
-	
+
 	Communities c;
 
-	//algs.runInfoMap("graph/my.txt", "tmp");
-	algs.readInfoMapResult("tmp/graph.tree", c);
+	algs.runInfoMap(file, outdir);
+	algs.readInfoMapResult(treef, c);
 	c.print();
 	//cout << g1.isClique();
 	FILE *fp = fopen("output.txt", "w");
@@ -119,7 +127,7 @@ int main()
 	time_t start, end;
 	start = time(NULL);//or time(&start);  
 	//…calculating…  
-	
+
 
 	for (int i = 0; i < c.size(); ++i)
 	{
@@ -134,6 +142,7 @@ int main()
 		//g2是这个社团节点构成的子图
 		Graph g2;
 		g.subGraph(subnodes, g2);
+		//showimg(g2);
 
 		vector<int> v;
 		//g.bfs(v, 3);
@@ -147,16 +156,25 @@ int main()
 		{
 			//print(subnodes);
 			end = time(NULL);
-			
+
+			showimg(g2);
 
 			printf("time=%.0lf, %.3lf%%:", difftime(end, start), 100 * double(i) / c.size());
 			output(fp, v);
 		}
-			
+
 
 
 	}
-	
+}
+int main()
+{
+	infomap_find_clique("graph/c125.9.11.12");
+	//findClique();
+	//Algs algs;
+	//algs.runInfoMap("graph/c125.9.11.12", "tmp");
+	//algs.runGraphviz("tmp\\g.dot", "tmp\\g.gif");
+	//algs.openfile("tmp\\g.gif");
 
 	return 0;
 }
